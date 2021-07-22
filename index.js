@@ -1,5 +1,6 @@
+const { json } = require('express');
 const express = require('express');
-
+const fs = require('fs');
 const app = express(); // start the express server
 
 // middleware func provided by express to parse body
@@ -38,6 +39,7 @@ app.get('/', (req, res) => {
 // handelling the post request sent by thr form on submission
 app.post('/', (req, res) => {
 	console.log(req.body);
+	const userInfo = req.body;
 });
 
 app.listen(3000, () => {
