@@ -1,6 +1,8 @@
 const { json } = require('express');
 const express = require('express');
 const fs = require('fs');
+const user = require('./repositories/usersRepo');
+
 const app = express(); // start the express server
 
 // middleware func provided by express to parse body
@@ -40,6 +42,7 @@ app.get('/', (req, res) => {
 app.post('/', (req, res) => {
 	console.log(req.body);
 	const userInfo = req.body;
+	user.create(userInfo);
 });
 
 app.listen(3000, () => {

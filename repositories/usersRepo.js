@@ -1,4 +1,5 @@
 const fs = require('fs');
+const crypto = require('crypto');
 
 // the repo to store users data
 class UsersRepo {
@@ -25,17 +26,69 @@ class UsersRepo {
 		);
 	}
 
-	// create will create a new user and add  it
-	async create(userData) {
-		let data = await this.getAll();
-		data.push(userData);
+	//  writeAll is the utility fn to save the data
+	async writeAll(data) {
 		data = JSON.stringify(data, null, 2);
 		await fs.promises.writeFile(this.fileName, data);
 	}
+	// create will create a new user and add  it
+	async create(userData) {
+		userData.id = this.randomId();
+		let data = await this.getAll();
+		data.push(userData);
+		await this.writeAll(data);
+	}
+
+	//  randomId will create randomId and assign to the new created user
+	randomId() {
+		//se the crypto module function
+		return crypto.randomBytes(4).toString('hex');
+	}
+
+	//  getOne will get data of a particular user based on the id pased
+	async getOne(id) {
+		const data = await this.getAll();
+		const foundUser = data.find((curr) => curr.id === id);
+		if (!foundUser) {
+			throw new Error("User doesn't exist");
+		} else {
+			return foundUser;
+		}
+	}
+	// update will update userData, the updaets are sent in as updatesObj<Object>
+	async update(id, updatesObj) {
+		let data = await this.getAll();
+		const foundUser = data.find((curr) => curr.id === id);
+		if (!foundUser) {
+			throw new Error("User doesn't exist");
+		}
+		data.forEach((curr) => {
+			if (curr.id == id) Object.assign(curr, updatesObj);
+		});
+		await this.writeAll(data);
+	}
+	// delete will delete the userData, recieves id as argum
+	async delete(id) {
+		let data = await this.getAll();
+		const foundUser = data.find((curr) => curr.id === id);
+		if (!foundUser) {
+			throw new Error("User doesn't exist");
+		}
+		data = data.filter((curr) => curr.id != id);
+		this.writeAll(data);
+	}
+	//  getOneBy will get the user based on filters pased , filters will be pased in as filtersObj<Object>
+	async getOneBy(filtersObj) {
+		let data = await this.getAll();
+		for (let userData of data) {
+			let isFound = true;
+			for (let key in filtersObj) {
+				if (filtersObj[key] != userData[key]) isFound = false;
+			}
+			if (isFound) {
+				return userData;
+			}
+		}
+	}
 }
-const user = new UsersRepo('user.json');
-const test = async () => {
-	await user.create({ name: 'jatin', age: '19' });
-	await user.getAll();
-};
-test();
+module.exports = new UsersRepo('users.json');
