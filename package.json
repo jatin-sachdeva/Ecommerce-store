@@ -10,7 +10,7 @@
 	"devDependencies": {},
 	"scripts": {
 		"dev": "nodemon index.js --ignore users.json",
-		"gitty": " git add .\\index.js .\\README.md .\\repositories\\ .\\package.json .\\package-lock.json .\\documentation.txt"
+		"gitty": " git add .\\index.js .\\README.md .\\repositories\\ .\\package.json .\\package-lock.json .\\documentation.txt .\\views .\\routes"
 	},
 	"repository": {
 		"type": "git",
