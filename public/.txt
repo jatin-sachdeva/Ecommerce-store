@@ -1,0 +1,3 @@
+/*the public folder will have all the files that can be viewed by anyone using dev tools
+and the browser can access so that it is loaded first.
+*/

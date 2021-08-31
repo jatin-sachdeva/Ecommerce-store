@@ -1,10 +1,12 @@
 // this route file will have code for the authentication routes
 
 const express = require('express');
+const { check, validationResult } = require('express-validator');
+
 const user = require('../../repositories/usersRepo');
-const adminLayout = require('../../views/admin/layout');
 const signup = require('../../views/admin/auth/signup');
 const signin = require('../../views/admin/auth/signin');
+const { getEmail, getPassword, getPasswordConfirmation, validateEmail, validatePassword } = require('./validators');
 
 /* 
 for managing the route handeler (app) that was intiated using express 
@@ -15,30 +17,26 @@ route handler inside the index.js
 // siginup , lets user signup through a form and saves the data to the database
 router.get('/signup', (req, res) => {
 	// sending a html form as response
-	res.send(signup());
+	res.send(signup({ req }));
 });
 
 // handelling the post request sent by the form on submission
-router.post('/signup', async (req, res) => {
-	// first we need to check wether the username already exists and are the passWord and confirm passWord same
-	const { email, password, confirmedPassword } = req.body;
-	const isPresent = await user.getOneBy({ email });
-	if (isPresent) {
-		console.log('error repeated user');
-		res.send('user already exists!!');
+router.post('/signup', [ getEmail, getPassword, getPasswordConfirmation ], async (req, res) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		// show the same html tempelate but with added errors corr to each input field
+		console.log(errors);
+		res.send(signup({ req, errors }));
+
 		return;
-	} else if (password != confirmedPassword) {
-		console.log('passwords dont match');
-		res.send('passwords dont match');
-		return;
+	} else {
+		const { email, password, confirmedPassword } = req.body;
+
+		const userData = await user.create({ email, password });
+
+		console.log('created');
+		res.send('created');
 	}
-	const userData = await user.create({ email, password });
-	// cookie-session willl add 'session'  <object> property to the req object and it will be sent to the browser
-	req.session = {
-		userId: userData.id
-	};
-	console.log('created');
-	res.send('created!!!');
 });
 
 // sign out ,the user is signed out and  session details are dumped
@@ -51,14 +49,19 @@ router.get('/signout', (req, res) => {
 router.get('/signin', (req, res) => {
 	res.send(signin({ req }));
 });
-router.post('/signin', async (req, res) => {
+router.post('/signin', [ validateEmail, validatePassword ], async (req, res) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		res.send(signin({ req, errors }));
+		return;
+	}
 	// if the credentals entered are correct:
 	const { email, password } = req.body;
 	const userData = await user.getOneBy({ email });
-	if (!userData) res.send('user not found');
-	if (!await user.comparePasswords(userData.password, password)) {
-		res.send('passwords are wrong');
-	}
+	// if (!userData) res.send('user not found');
+	// if (!await user.comparePasswords(userData.password, password)) {
+	// 	res.send('passwords are wrong');
+	// }
 	// const [ hashPass, salt ] = userData.password.split('.');
 
 	// let checkPass = await scrypt(password, salt, 64);
@@ -68,6 +71,7 @@ router.post('/signin', async (req, res) => {
 	req.session = {
 		userId: userData.id
 	};
+
 	res.send(`welcome `);
 });
 module.exports = {

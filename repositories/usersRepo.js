@@ -113,7 +113,8 @@ class UsersRepo {
 		const [ hashPass, salt ] = dbStored.split('.');
 		let checkPass = await scrypt(userEntered, salt, 64);
 		checkPass = checkPass.toString('hex');
-		return hashPass == checkPass;
+		console.log(hashPass + ' ' + checkPass);
+		return hashPass == checkPass ? true : false;
 	}
 }
 module.exports = new UsersRepo('users.json');

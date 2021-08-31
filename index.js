@@ -17,6 +17,9 @@ app.use(
 		keys: [ 'asurijdnff' ]
 	})
 );
+// public files request handle
+app.use(express.static('public')); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!to learn still
+
 app.use(authRouter); // linking the authRouter
 app.listen(3000, () => {
 	console.log('listening to port 3000 on localhost');
