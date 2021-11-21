@@ -1,5 +1,4 @@
 // this route file will have code for the authentication routes
-
 const express = require('express');
 const { check, validationResult } = require('express-validator');
 
