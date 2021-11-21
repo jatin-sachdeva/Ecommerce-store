@@ -1,4 +1,5 @@
 // it will contain all the validator and sanitixor code for the project
+
 const { validationResult, check } = require('express-validator');
 
 const user = require('../../repositories/usersRepo');
