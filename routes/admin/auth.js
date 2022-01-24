@@ -34,7 +34,7 @@ router.post('/signup', [ getEmail, getPassword, getPasswordConfirmation ], async
 		const userData = await user.create({ email, password });
 
 		console.log('created');
-		res.send('created');
+		res.redirect('/admin/products'); // redirecting
 	}
 });
 
@@ -71,7 +71,7 @@ router.post('/signin', [ validateEmail, validatePassword ], async (req, res) => 
 		userId: userData.id
 	};
 
-	res.send(`welcome `);
+	res.redirect('/admin/products'); // redirecting
 });
 module.exports = {
 	router

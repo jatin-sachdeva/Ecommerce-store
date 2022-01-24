@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const util = require('util');
 const cookieSession = require('cookie-session');
 const { router: authRouter } = require('./routes/admin/auth');
+const { router: productRouter } = require('./routes/admin/products');
 
 const app = express(); // start the express server
 const scrypt = util.promisify(crypto.scrypt);
@@ -21,6 +22,7 @@ app.use(
 app.use(express.static('public')); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!to learn still
 
 app.use(authRouter); // linking the authRouter
+app.use(productRouter); //linking the product router
 app.listen(3000, () => {
 	console.log('listening to port 3000 on localhost');
 });

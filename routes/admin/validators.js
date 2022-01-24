@@ -35,5 +35,8 @@ module.exports = {
 		if (!userData) throw new Error('invalid password');
 		const isUser = await user.comparePasswords(userData.password, password);
 		if (!isUser) throw new Error('password is wrong');
-	})
+	}),
+	// for  products
+	getTitle: check('title').trim().isLength({ min: 5, max: 20 }).withMessage('should be between 5 to 20 chars'),
+	getPrice: check('price').trim().toFloat().isFloat({ min: 1 }).withMessage('should be a number')
 };
