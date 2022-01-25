@@ -37,7 +37,7 @@ class Repo {
 		userData.id = id;
 		data.push(userData);
 		await this.writeAll(data);
-		return data;
+		return userData;
 	}
 
 	//  randomId will create randomId and assign to the new created user

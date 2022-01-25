@@ -11,7 +11,7 @@
 	},
 	"devDependencies": {},
 	"scripts": {
-		"dev": "nodemon index.js --ignore users.json --ignore products.json",
+		"dev": "nodemon index.js --ignore users.json --ignore products.json --ignore carts.json",
 		"gitty": " git add .\\index.js .\\README.md .\\repositories\\ .\\package.json .\\package-lock.json .\\documentation.txt .\\views .\\routes .\\public"
 	},
 	"repository": {

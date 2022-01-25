@@ -40,6 +40,7 @@ router.post('/signup', [ getEmail, getPassword, getPasswordConfirmation ], async
 
 // sign out ,the user is signed out and  session details are dumped
 router.get('/signout', (req, res) => {
+	console.log(req.session.userId);
 	req.session = null;
 	res.send('you are logged out');
 });
